@@ -19,6 +19,14 @@ resource "random_string" "identity_file" {
   upper   = false
 }
 
+resource "hcloud_floating_ip" "server" {
+  count = var.floating_ip ? 1 : 0
+
+  type          = "ipv4"
+  labels        = var.labels
+  home_location = var.location
+}
+
 resource "hcloud_server" "server" {
   name               = local.name
   image              = var.microos_snapshot_id
@@ -90,6 +98,48 @@ resource "hcloud_server" "server" {
       EOT
     ]
   }
+}
+
+resource "hcloud_floating_ip_assignment" "server" {
+  count = var.floating_ip ? 1 : 0
+
+  floating_ip_id = hcloud_floating_ip.server[0].id
+  server_id      = hcloud_server.server.id
+}
+
+resource "null_resource" "configure_floating_ip" {
+  count = var.floating_ip ? 1 : 0
+
+  triggers = {
+    server_ip      = hcloud_server.server.ipv4_address
+    floating_ip    = hcloud_floating_ip.server[0].ip_address
+    script_version = 1
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      <<-EOT
+      NM_CONNECTION=$(nmcli -g GENERAL.CONNECTION device show eth0)
+      nmcli connection modify "$NM_CONNECTION" \
+        ipv4.method manual \
+        ipv4.addresses ${hcloud_floating_ip.server[0].ip_address}/32,${hcloud_server.server.ipv4_address}/32 gw4 172.31.1.1 \
+        ipv4.route-metric 100 \
+      && nmcli connection up "$NM_CONNECTION"
+      EOT
+    ]
+  }
+
+  connection {
+    user           = "root"
+    private_key    = var.ssh_private_key
+    agent_identity = local.ssh_agent_identity
+    host           = hcloud_server.server.ipv4_address
+    port           = var.ssh_port
+  }
+
+  depends_on = [
+    hcloud_floating_ip_assignment.server
+  ]
 }
 
 resource "null_resource" "registries" {

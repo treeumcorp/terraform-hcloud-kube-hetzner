@@ -11,5 +11,4 @@ locals {
 
   # the hosts name with its unique suffix attached
   name = "${var.name}-${random_string.server.id}"
-
 }

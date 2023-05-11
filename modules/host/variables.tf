@@ -72,6 +72,12 @@ variable "private_ipv4" {
   type        = string
 }
 
+variable "floating_ip" {
+  description = "Assign FloatingIP to server"
+  type        = bool
+  default     = false
+}
+
 variable "server_type" {
   description = "The server type"
   type        = string

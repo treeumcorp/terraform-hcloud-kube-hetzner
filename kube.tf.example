@@ -243,7 +243,7 @@ module "kube-hetzner" {
   # Just provide a map with the needed settings (according to your S3 storage provider) and backups to S3 will
   # be enabled (with the default settings for etcd snapshots).
   # Cloudflare's R2 offers 10GB, 10 million reads and 1 million writes per month for free.
-  # For proper context, have a look at https://docs.k3s.io/backup-restore.
+  # For proper context, have a look at https://docs.k3s.io/datastore/backup-restore.
   # etcd_s3_backup = {
   #   etcd-s3-endpoint        = "xxxx.r2.cloudflarestorage.com"
   #   etcd-s3-access-key      = "<access-key>"
@@ -493,6 +493,9 @@ module "kube-hetzner" {
   # by Rancher in the wizard, and that would register your cluster too.
   # More information about the registration can be found here https://rancher.com/docs/rancher/v2.6/en/cluster-provisioning/registered-clusters/
   # rancher_registration_manifest_url = "https://rancher.xyz.dev/v3/import/xxxxxxxxxxxxxxxxxxYYYYYYYYYYYYYYYYYYYzzzzzzzzzzzzzzzzzzzzz.yaml"
+
+  # Extra commands to be executed after the `kubectl apply -k` (useful for post-install actions, e.g. wait for CRD, apply additional manifests, etc.).
+  # extra_kustomize_deployment_commands=""
 
   # Extra values that will be passed to the `extra-manifests/kustomization.yaml.tpl` if its present.
   # extra_kustomize_parameters={}

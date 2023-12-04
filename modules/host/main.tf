@@ -98,6 +98,12 @@ resource "hcloud_server" "server" {
       EOT
     ]
   }
+  provisioner "remote-exec" {
+    inline = [
+      "cloud-init status --wait"
+    ]
+  }
+
 }
 
 resource "hcloud_floating_ip_assignment" "server" {

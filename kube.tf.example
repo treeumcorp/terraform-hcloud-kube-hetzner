@@ -228,6 +228,9 @@ module "kube-hetzner" {
   # Disable IPv6 for the load balancer, the default is false.
   # load_balancer_disable_ipv6 = true
 
+  # Disables the public network of the load balancer. (default: false).
+  # load_balancer_disable_public_network = true
+
   # Specifies the algorithm type of the load balancer. (default: round_robin).
   # load_balancer_algorithm_type = "least_connections"
 
@@ -559,6 +562,9 @@ module "kube-hetzner" {
 
   # When the above use_control_plane_lb is enabled, you can change the lb type for it, the default is "lb11".
   # control_plane_lb_type = "lb21"
+
+  # When the above use_control_plane_lb is enabled, you can change to disable the public interface for control plane load balancer, the default is true.
+  # control_plane_lb_enable_public_interface = false
 
   # Let's say you are not using the control plane LB solution above, and still want to have one hostname point to all your control-plane nodes.
   # You could create multiple A records of to let's say cp.cluster.my.org pointing to all of your control-plane nodes ips.

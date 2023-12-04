@@ -53,8 +53,9 @@ resource "hcloud_load_balancer" "control_plane" {
 resource "hcloud_load_balancer_network" "control_plane" {
   count = var.use_control_plane_lb ? 1 : 0
 
-  load_balancer_id = hcloud_load_balancer.control_plane.*.id[0]
-  subnet_id        = hcloud_network_subnet.control_plane.*.id[0]
+  load_balancer_id        = hcloud_load_balancer.control_plane.*.id[0]
+  subnet_id               = hcloud_network_subnet.control_plane.*.id[0]
+  enable_public_interface = var.control_plane_lb_enable_public_interface
 }
 
 resource "hcloud_load_balancer_target" "control_plane" {
@@ -143,7 +144,7 @@ resource "null_resource" "control_planes" {
     inline = [
       "systemctl start k3s 2> /dev/null",
       <<-EOT
-      timeout 120 bash <<EOF
+      timeout 360 bash <<EOF
         until systemctl status k3s > /dev/null; do
           systemctl start k3s 2> /dev/null
           echo "Waiting for the k3s server to start..."

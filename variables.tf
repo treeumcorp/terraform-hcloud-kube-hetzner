@@ -104,6 +104,12 @@ variable "load_balancer_disable_ipv6" {
   default     = false
 }
 
+variable "load_balancer_disable_public_network" {
+  description = "Disables the public network of the load balancer."
+  type        = bool
+  default     = false
+}
+
 variable "load_balancer_algorithm_type" {
   description = "Specifies the algorithm type of the load balancer."
   type        = string
@@ -602,7 +608,7 @@ variable "rancher_values" {
 
 variable "kured_version" {
   type        = string
-  default     = null
+  default     = "1.13.1"
   description = "Version of Kured."
 }
 
@@ -627,6 +633,12 @@ variable "control_plane_lb_type" {
   type        = string
   default     = "lb11"
   description = "The type of load balancer to use for the control plane load balancer. Defaults to lb11, which is the cheapest one."
+}
+
+variable "control_plane_lb_enable_public_interface" {
+  type        = bool
+  default     = true
+  description = "Enable or disable public interface for the control plane load balancer . Defaults to true."
 }
 
 variable "dns_servers" {

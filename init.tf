@@ -38,9 +38,10 @@ resource "null_resource" "first_control_plane" {
           advertise-address           = module.control_planes[keys(module.control_planes)[0]].private_ipv4_address
           node-taint                  = local.control_plane_nodes[keys(module.control_planes)[0]].taints
           node-label                  = local.control_plane_nodes[keys(module.control_planes)[0]].labels
+          selinux                     = true
           cluster-cidr                = var.cluster_ipv4_cidr
           service-cidr                = var.service_ipv4_cidr
-          selinux                     = true
+          cluster-dns                 = var.cluster_dns_ipv4
         },
         lookup(local.cni_k3s_settings, var.cni_plugin, {}),
         var.use_control_plane_lb ? {
@@ -322,7 +323,7 @@ resource "null_resource" "kustomization" {
 
   depends_on = [
     hcloud_load_balancer.cluster,
-    null_resource.first_control_plane,
+    null_resource.control_planes,
     random_password.rancher_bootstrap,
     hcloud_volume.longhorn_volume
   ]

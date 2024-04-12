@@ -21,4 +21,10 @@ spec:
             %{~ for key, value in options ~}
             - --${key}=${value}
             %{~ endfor ~}
-
+      tolerations:
+        - operator: Exists
+          effect: NoExecute
+        - operator: Exists
+          effect: NoSchedule
+        - key: CriticalAddonsOnly
+          operator: Exists

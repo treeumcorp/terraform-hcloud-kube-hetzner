@@ -448,7 +448,7 @@ variable "enable_metrics_server" {
 
 variable "initial_k3s_channel" {
   type        = string
-  default     = "v1.28"
+  default     = "v1.28" # Please update kube.tf.example too when changing this variable
   description = "Allows you to specify an initial k3s channel."
 
   validation {
@@ -577,6 +577,12 @@ variable "calico_values" {
   type        = string
   default     = ""
   description = "Just a stub for a future helm implementation. Now it can be used to replace the calico kustomize patch of the calico manifest."
+}
+
+variable "enable_iscsid" {
+  type        = bool
+  default     = false
+  description = "This is always true when enable_longhorn=true, however, you may also want this enabled if you perform your own installation of longhorn after this module runs."
 }
 
 variable "enable_longhorn" {

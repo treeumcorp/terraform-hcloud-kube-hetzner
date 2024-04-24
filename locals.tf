@@ -581,7 +581,6 @@ podDisruptionBudget:
   maxUnavailable: 33%
 %{endif~}
 additionalArguments:
-  - "--entrypoints.tcp=true"
   - "--providers.kubernetesingress.ingressendpoint.publishedservice=${local.ingress_controller_namespace}/traefik"
 %{for option in var.traefik_additional_options~}
   - "${option}"
@@ -622,7 +621,6 @@ installCRDs: true
     "pre-reboot-node-labels" : "kured=rebooting",
     "post-reboot-node-labels" : "kured=done",
     "period" : "5m",
-    "lock-ttl" : "30m"
   }, var.kured_options)
 
   k3s_registries_update_script = <<EOF
@@ -833,7 +831,7 @@ EOT
 # SELinux permission for the SSH alternative port
 %{if var.ssh_port != 22}
 # SELinux permission for the SSH alternative port.
-- [semanage, port, '-a', '-t', ssh_port_t, '-p', tcp, ${var.ssh_port}]
+- [semanage, port, '-a', '-t', ssh_port_t, '-p', tcp, '${var.ssh_port}']
 %{endif}
 
 # Create and apply the necessary SELinux module for kube-hetzner

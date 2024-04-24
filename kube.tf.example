@@ -208,7 +208,7 @@ module "kube-hetzner" {
     # See the https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner#examples for an example use case.
     {
       name        = "egress",
-      server_type = "cpx11",
+      server_type = "cx21",
       location    = "fsn1",
       labels = [
         "node.kubernetes.io/role=egress"
@@ -413,7 +413,8 @@ module "kube-hetzner" {
   # After the cluster is deployed, you can always use HelmChartConfig definition to tweak the configuration.
   # If you want to disable both controllers set this to "none"
   # ingress_controller = "nginx"
-  # ingress_target_namespace = "" // In which namespace to deploy the ingress controllers. Defaults to the ingress_controller variable, eg (nginx, traefik)
+  # Namespace in which to deploy the ingress controllers. Defaults to the ingress_controller variable, eg (nginx, traefik)
+  # ingress_target_namespace = ""
 
   # You can change the number of replicas for selected ingress controller here. The default 0 means autoselecting based on number of agent nodes (1 node = 1 replica, 2 nodes = 2 replicas, 3+ nodes = 3 replicas)
   # ingress_replica_count = 1
@@ -610,6 +611,8 @@ module "kube-hetzner" {
   # possible values: flannel (Default), calico, and cilium
   # As for Cilium, we allow infinite configurations via helm values, please check the CNI section of the readme over at https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner/#cni.
   # Also, see the cilium_values at towards the end of this file, in the advanced section.
+  # ⚠️ Depending on your setup, sometimes you need your control-planes to have more than
+  # 2GB of RAM if you are going to use Cilium, otherwise the pods will not start.
   # cni_plugin = "cilium"
 
   # You can choose the version of Cilium that you want. By default we keep the version up to date and configure Cilium with compatible settings according to the version.

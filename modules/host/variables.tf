@@ -144,3 +144,9 @@ variable "zram_size" {
     error_message = "Invalid zram size. Examples: 512M, 1G"
   }
 }
+
+variable "enable_delete_protection_floating_ip" {
+  default     = false
+  type        = bool
+  description = "Enable or disable delete protection for floating-ip resources in Hetzner Cloud."
+}

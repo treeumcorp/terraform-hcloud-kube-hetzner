@@ -25,6 +25,8 @@ resource "hcloud_floating_ip" "server" {
   type          = "ipv4"
   labels        = var.labels
   home_location = var.location
+
+  delete_protection = var.enable_delete_protection_floating_ip
 }
 
 resource "hcloud_server" "server" {

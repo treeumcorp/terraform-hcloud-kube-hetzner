@@ -29,6 +29,8 @@ module "agents" {
   cloudinit_runcmd_common      = local.cloudinit_runcmd_common
   swap_size                    = each.value.swap_size
 
+  enable_delete_protection_floating_ip = var.enable_delete_protection.floating_ip
+
   private_ipv4 = cidrhost(hcloud_network_subnet.agent[[for i, v in var.agent_nodepools : i if v.name == each.value.nodepool_name][0]].ip_range, each.value.index + 101)
 
   labels = merge(local.labels, local.labels_agent_node)
@@ -136,11 +138,12 @@ resource "hcloud_volume" "longhorn_volume" {
     cluster     = var.cluster_name
     scope       = "longhorn"
   }
-  name      = "${var.cluster_name}-longhorn-${module.agents[each.key].name}"
-  size      = local.agent_nodes[each.key].longhorn_volume_size
-  server_id = module.agents[each.key].id
-  automount = true
-  format    = var.longhorn_fstype
+  name              = "${var.cluster_name}-longhorn-${module.agents[each.key].name}"
+  size              = local.agent_nodes[each.key].longhorn_volume_size
+  server_id         = module.agents[each.key].id
+  automount         = true
+  format            = var.longhorn_fstype
+  delete_protection = var.enable_delete_protection.volume
 }
 
 resource "null_resource" "configure_longhorn_volume" {

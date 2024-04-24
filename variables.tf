@@ -308,15 +308,22 @@ variable "cluster_autoscaler_extra_args" {
   description = "Extra arguments for the Cluster Autoscaler deployment."
 }
 
+variable "cluster_autoscaler_server_creation_timeout" {
+  type        = number
+  default     = 15
+  description = "Timeout (in minutes) until which a newly created server/node has to become available before giving up and destroying it."
+}
+
 variable "autoscaler_nodepools" {
   description = "Cluster autoscaler nodepools."
   type = list(object({
-    name        = string
-    server_type = string
-    location    = string
-    min_nodes   = number
-    max_nodes   = number
-    labels      = optional(map(string), {})
+    name         = string
+    server_type  = string
+    location     = string
+    min_nodes    = number
+    max_nodes    = number
+    labels       = optional(map(string), {})
+    kubelet_args = optional(list(string), ["kube-reserved=cpu=50m,memory=300Mi,ephemeral-storage=1Gi", "system-reserved=cpu=250m,memory=300Mi"])
     taints = optional(list(object({
       key    = string
       value  = string
@@ -945,6 +952,12 @@ variable "k3s_agent_kubelet_args" {
   type        = list(string)
   default     = []
   description = "Kubelet args for agent nodes."
+}
+
+variable "k3s_autoscaler_kubelet_args" {
+  type        = list(string)
+  default     = []
+  description = "Kubelet args for autoscaler nodes."
 }
 
 variable "ingress_target_namespace" {

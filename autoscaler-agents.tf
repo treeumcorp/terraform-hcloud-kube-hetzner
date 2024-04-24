@@ -27,20 +27,21 @@ locals {
   autoscaler_yaml = length(var.autoscaler_nodepools) == 0 ? "" : templatefile(
     "${path.module}/templates/autoscaler.yaml.tpl",
     {
-      cloudinit_config                    = local.isUsingLegacyConfig ? base64encode(data.cloudinit_config.autoscaler_legacy_config[0].rendered) : ""
-      ca_image                            = var.cluster_autoscaler_image
-      ca_version                          = var.cluster_autoscaler_version
-      cluster_autoscaler_extra_args       = var.cluster_autoscaler_extra_args
-      cluster_autoscaler_log_level        = var.cluster_autoscaler_log_level
-      cluster_autoscaler_log_to_stderr    = var.cluster_autoscaler_log_to_stderr
-      cluster_autoscaler_stderr_threshold = var.cluster_autoscaler_stderr_threshold
-      ssh_key                             = local.hcloud_ssh_key_id
-      ipv4_subnet_id                      = data.hcloud_network.k3s.id
-      snapshot_id                         = local.first_nodepool_snapshot_id
-      cluster_config                      = base64encode(jsonencode(local.cluster_config))
-      firewall_id                         = hcloud_firewall.k3s.id
-      cluster_name                        = local.cluster_prefix
-      node_pools                          = var.autoscaler_nodepools
+      cloudinit_config                           = local.isUsingLegacyConfig ? base64encode(data.cloudinit_config.autoscaler_legacy_config[0].rendered) : ""
+      ca_image                                   = var.cluster_autoscaler_image
+      ca_version                                 = var.cluster_autoscaler_version
+      cluster_autoscaler_extra_args              = var.cluster_autoscaler_extra_args
+      cluster_autoscaler_log_level               = var.cluster_autoscaler_log_level
+      cluster_autoscaler_log_to_stderr           = var.cluster_autoscaler_log_to_stderr
+      cluster_autoscaler_stderr_threshold        = var.cluster_autoscaler_stderr_threshold
+      cluster_autoscaler_server_creation_timeout = tostring(var.cluster_autoscaler_server_creation_timeout)
+      ssh_key                                    = local.hcloud_ssh_key_id
+      ipv4_subnet_id                             = data.hcloud_network.k3s.id
+      snapshot_id                                = local.first_nodepool_snapshot_id
+      cluster_config                             = base64encode(jsonencode(local.cluster_config))
+      firewall_id                                = hcloud_firewall.k3s.id
+      cluster_name                               = local.cluster_prefix
+      node_pools                                 = var.autoscaler_nodepools
   })
   # A concatenated list of all autoscaled nodes
   autoscaled_nodes = length(var.autoscaler_nodepools) == 0 ? {} : {
@@ -100,7 +101,7 @@ data "cloudinit_config" "autoscaler_config" {
         k3s_config = yamlencode({
           server        = "https://${var.use_control_plane_lb ? hcloud_load_balancer_network.control_plane.*.ip[0] : module.control_planes[keys(module.control_planes)[0]].private_ipv4_address}:6443"
           token         = local.k3s_token
-          kubelet-arg   = local.kubelet_arg
+          kubelet-arg   = concat(local.kubelet_arg, var.k3s_global_kubelet_args, var.k3s_autoscaler_kubelet_args, var.autoscaler_nodepools[count.index].kubelet_args)
           flannel-iface = local.flannel_iface
           node-label    = concat(local.default_agent_labels, [for k, v in var.autoscaler_nodepools[count.index].labels : "${k}=${v}"])
           node-taint    = concat(local.default_agent_taints, [for taint in var.autoscaler_nodepools[count.index].taints : "${taint.key}=${taint.value}:${taint.effect}"])

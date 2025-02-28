@@ -145,6 +145,12 @@ variable "zram_size" {
   }
 }
 
+variable "keep_disk_size" {
+  type        = bool
+  default     = false
+  description = "Whether to keep OS disks of nodes the same size when upgrading a node"
+}
+
 variable "enable_delete_protection_floating_ip" {
   default     = false
   type        = bool

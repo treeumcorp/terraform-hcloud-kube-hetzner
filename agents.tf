@@ -28,6 +28,8 @@ module "agents" {
   cloudinit_write_files_common = local.cloudinit_write_files_common
   cloudinit_runcmd_common      = local.cloudinit_runcmd_common
   swap_size                    = each.value.swap_size
+  zram_size                    = each.value.zram_size
+  keep_disk_size               = var.keep_disk_agents
 
   enable_delete_protection_floating_ip = var.enable_delete_protection.floating_ip
 

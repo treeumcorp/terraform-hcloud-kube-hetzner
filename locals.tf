@@ -481,6 +481,19 @@ egressGateway:
   enabled: true
 %{endif~}
 
+%{if var.cilium_hubble_enabled}
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+  metrics:
+    enabled:
+%{for metric in var.cilium_hubble_metrics_enabled~}
+      - "${metric}"
+%{endfor~}
+%{endif~}
+
 MTU: 1450
   EOT
 
@@ -625,7 +638,8 @@ ports:
 %{for option in var.traefik_additional_ports~}
   ${option.name}:
     port: ${option.port}
-    expose: true
+    expose:
+      default: true
     exposedPort: ${option.exposedPort}
     protocol: TCP
 %{if !local.using_klipper_lb~}

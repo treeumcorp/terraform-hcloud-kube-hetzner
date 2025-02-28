@@ -73,11 +73,13 @@ resource "hcloud_server" "server" {
   # Wait for MicroOS to reboot and be ready.
   provisioner "local-exec" {
     command = <<-EOT
-      until ssh ${local.ssh_args} -i /tmp/${random_string.identity_file.id} -o ConnectTimeout=2 -p ${var.ssh_port} root@${self.ipv4_address} true 2> /dev/null
-      do
-        echo "Waiting for MicroOS to become available..."
-        sleep 3
-      done
+      timeout 600 bash <<EOF
+        until ssh ${local.ssh_args} -i /tmp/${random_string.identity_file.id} -o ConnectTimeout=2 -p ${var.ssh_port} root@${self.ipv4_address} true 2> /dev/null
+        do
+          echo "Waiting for MicroOS to become available..."
+          sleep 3
+        done
+      EOF
     EOT
   }
 
@@ -109,6 +111,18 @@ resource "hcloud_floating_ip_assignment" "server" {
 
   floating_ip_id = hcloud_floating_ip.server[0].id
   server_id      = hcloud_server.server.id
+}
+
+resource "hcloud_rdns" "floating_ip" {
+  count = var.floating_ip && var.floating_ip_rdns != null ? 1 : 0
+
+  floating_ip_id = hcloud_floating_ip.server[0].id
+  ip_address     = hcloud_floating_ip.server[0].ip_address
+  dns_ptr        = var.floating_ip_rdns
+
+  depends_on = [
+    hcloud_floating_ip.server,
+  ]
 }
 
 resource "null_resource" "configure_floating_ip" {

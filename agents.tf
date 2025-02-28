@@ -22,6 +22,7 @@ module "agents" {
   backups                      = each.value.backups
   ipv4_subnet_id               = hcloud_network_subnet.agent[[for i, v in var.agent_nodepools : i if v.name == each.value.nodepool_name][0]].id
   floating_ip                  = each.value.floating_ip
+  floating_ip_rdns             = each.value.floating_ip_rdns
   dns_servers                  = var.dns_servers
   k3s_registries               = var.k3s_registries
   k3s_registries_update_script = local.k3s_registries_update_script

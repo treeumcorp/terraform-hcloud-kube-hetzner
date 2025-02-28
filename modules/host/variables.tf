@@ -78,6 +78,12 @@ variable "floating_ip" {
   default     = false
 }
 
+variable "floating_ip_rdns" {
+  description = "Associate a reverse DNS entry with the floatingIP"
+  type        = string
+  default     = null
+}
+
 variable "server_type" {
   description = "The server type"
   type        = string

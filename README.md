@@ -49,7 +49,7 @@ To achieve this, we built up on the shoulders of giants by choosing [openSUSE Mi
 - [x] Proper use of the **Hetzner private network** to minimize latency.
 - [x] Choose between **Flannel, Calico, or Cilium** as CNI.
 - [x] Optional **Wireguard** encryption of the Kube network for added security.
-- [x] **Traefik** or **Nginx** as ingress controller attached to a Hetzner load balancer with Proxy Protocol turned on.
+- [x] **Traefik**, **Nginx** or **HAProxy** as ingress controller attached to a Hetzner load balancer with Proxy Protocol turned on.
 - [x] **Automatic HA** with the default setting of three control-plane nodes and two agent nodes.
 - [x] **Autoscaling** nodes via the [kubernetes autoscaler](https://github.com/kubernetes/autoscaler).
 - [x] **Super-HA** with Nodepools for both control-plane and agent nodes that can be in different locations.
@@ -285,7 +285,7 @@ Most cluster components of Kube-Hetzner are deployed with the Rancher [Helm Char
 
 By default, we strive to give you optimal defaults, but if you wish, you can customize them.
 
-For Traefik, Nginx, Rancher, Cilium, Traefik, and Longhorn, for maximum flexibility, we give you the ability to configure them even better via helm values variables (e.g. `cilium_values`, see the advanced section in the kube.tf.example for more).
+For Traefik, Nginx, HAProxy, Rancher, Cilium, Traefik, and Longhorn, for maximum flexibility, we give you the ability to configure them even better via helm values variables (e.g. `cilium_values`, see the advanced section in the kube.tf.example for more).
 
 ## Adding Extras
 
@@ -366,7 +366,7 @@ Example nodepool configuration:
 ```tf
 {
   name        = "egress",
-  server_type = "cpx11",
+  server_type = "cx22",
   location    = "fsn1",
   labels = [
     "node.kubernetes.io/role=egress"
@@ -947,7 +947,7 @@ easily map between your nodes and your kube.tf file.
   agent_nodepools = [
     {
       name        = "agent-large",
-      server_type = "cpx21",
+      server_type = "cx32",
       location    = "nbg1",
       labels      = [],
       taints      = [],
@@ -960,7 +960,7 @@ easily map between your nodes and your kube.tf file.
         },
         "1" : {
           append_index_to_node_name = false,
-          server_type = "cpx31",
+          server_type = "cx42",
           labels = ["my.extra.label=slightlybiggernode"]
           placement_group = "agent-large-pg-2",
         },

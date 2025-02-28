@@ -551,6 +551,12 @@ variable "initial_k3s_channel" {
   }
 }
 
+variable "install_k3s_version" {
+  type        = string
+  default     = ""
+  description = "Allows you to specify the k3s version (Example: v1.29.6+k3s2). Supersedes initial_k3s_channel."
+}
+
 variable "system_upgrade_enable_eviction" {
   type        = bool
   default     = true
@@ -1122,5 +1128,12 @@ variable "keep_disk_agents" {
 variable "keep_disk_cp" {
   type        = bool
   default     = false
+  description = "Whether to keep OS disks of nodes the same size when upgrading a control-plane node"
+}
+
+
+variable "sys_upgrade_controller_version" {
+  type        = string
+  default     = "v0.13.4"
   description = "Whether to keep OS disks of nodes the same size when upgrading a control-plane node"
 }

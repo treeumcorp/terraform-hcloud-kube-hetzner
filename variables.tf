@@ -276,7 +276,7 @@ variable "cluster_autoscaler_image" {
 
 variable "cluster_autoscaler_version" {
   type        = string
-  default     = "v1.31.1"
+  default     = "v1.30.3"
   description = "Version of Kubernetes Cluster Autoscaler for Hetzner Cloud. Should be aligned with Kubernetes version"
 }
 
@@ -542,7 +542,7 @@ variable "enable_metrics_server" {
 
 variable "initial_k3s_channel" {
   type        = string
-  default     = "stable" # Please update kube.tf.example too when changing this variable
+  default     = "v1.30" # Please update kube.tf.example too when changing this variable
   description = "Allows you to specify an initial k3s channel."
 
   validation {
@@ -1135,5 +1135,5 @@ variable "keep_disk_cp" {
 variable "sys_upgrade_controller_version" {
   type        = string
   default     = "v0.14.2"
-  description = "Whether to keep OS disks of nodes the same size when upgrading a control-plane node"
+  description = "Version of the System Upgrade Controller for automated upgrades of k3s"
 }

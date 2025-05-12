@@ -12,7 +12,7 @@
   </p>
   <hr />
     <p align="center">
-    🔥 Introducing <a href="https://chat.openai.com/g/g-UEqjc2qiW-kh-assistant" target="_blank">KH Assistant</a>, our Custom-GPT kube.tf generator to get you going fast, just tell it what you need! 🚀
+    🔥 Introducing <a href="https://chatgpt.com/g/g-67df95cd1e0c8191baedfa3179061581-kh-assistant" target="_blank">KH Assistant</a>, our Custom-GPT kube.tf generator to get you going fast, just tell it what you need! 🚀
   </p>
   <hr />
 </p>
@@ -74,7 +74,7 @@ Follow those simple steps, and your world's cheapest Kubernetes cluster will be 
 
 First and foremost, you need to have a Hetzner Cloud account. You can sign up for free [here](https://hetzner.com/cloud/).
 
-Then you'll need to have [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) or [tofu](https://opentofu.org/docs/intro/install/), [packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli#installing-packer) (for the initial snapshot creation only, no longer needed once that's done), [kubectl](https://kubernetes.io/docs/tasks/tools/) cli and [hcloud](https://github.com/hetznercloud/cli) the Hetzner cli for convenience. The easiest way is to use the [homebrew](https://brew.sh/) package manager to install them (available on Linux, Mac, and Windows Linux Subsystem).
+Then you'll need to have [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) or [tofu](https://opentofu.org/docs/intro/install/), [packer](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli#installing-packer) (for the initial snapshot creation only, no longer needed once that's done), [kubectl](https://kubernetes.io/docs/tasks/tools/) cli and [hcloud](https://github.com/hetznercloud/cli) the Hetzner cli for convenience. The easiest way is to use the [homebrew](https://brew.sh/) package manager to install them (available on Linux, Mac, and Windows Linux Subsystem). Timeout command is also used, which is a part of coreutils on MacOS.
 
 ```sh
 brew tap hashicorp/tap
@@ -82,6 +82,7 @@ brew install hashicorp/tap/terraform # OR brew install opentofu
 brew install hashicorp/tap/packer
 brew install kubectl
 brew install hcloud
+brew install coreutils
 ```
 
 ### 💡 [Do not skip] Creating your kube.tf file and the OpenSUSE MicroOS snapshot
